@@ -1,4 +1,4 @@
-Shader "ShaderFun/Gaussian Blur" {
+Shader "ShaderFun/GaussianBlur" {
 	Properties {
 		_MainTex("Texture", 2D) = "white" {}
 		_Radius("Radius", Range(0, 1)) = 0
@@ -23,8 +23,7 @@ Shader "ShaderFun/Gaussian Blur" {
 				float4 vertex : SV_POSITION;
 			};
 
-			v2f vert(appdata v)
-			{
+			v2f vert(appdata v) {
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);
 				o.uv = v.uv;
@@ -61,7 +60,7 @@ Shader "ShaderFun/Gaussian Blur" {
 				return sum / sumWeight;
 			}
 
-			fixed4 frag(v2f i) : SV_Target {
+			float4 frag(v2f i) : SV_Target {
 				return Blur(i.uv);
 			}
 			ENDCG

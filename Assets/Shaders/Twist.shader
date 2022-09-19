@@ -25,8 +25,7 @@ Shader "ShaderFun/Twist" {
 				float4 vertex : SV_POSITION;
 			};
 
-			v2f vert(appdata v)
-			{
+			v2f vert(appdata v) {
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);
 				o.uv = v.uv;
@@ -34,7 +33,7 @@ Shader "ShaderFun/Twist" {
 			}
 
 			sampler2D _MainTex;
-			float4 _Center;
+			float2 _Center;
 			float _Rotation;
 			float _Range;
 
@@ -45,7 +44,7 @@ Shader "ShaderFun/Twist" {
 				return mul(offset, mat);
 			}
 
-			fixed4 frag(v2f i) : SV_Target{
+			float4 frag(v2f i) : SV_Target{
 				float2 uv = i.uv - _Center;
 				uv = Twist(uv);
 				return tex2D(_MainTex, uv + _Center);
