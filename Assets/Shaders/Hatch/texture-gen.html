@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<style>
+		body {
+			display: flex;
+			gap: 1em;
+		}
+	</style>
+</head>
+<body>
+	<form>
+		<p>
+			<span>Texture size:</span>
+			<input name="texture-size" type="number" value="512" min="1" max="512" />
+		</p>
+		<p>
+			<span>Stroke width:</span>
+			<input name="stroke-width" type="number" value="1" min="0" max="4" step="0.1" />
+		</p>
+		<p>
+			<span>Stroke length:</span>
+			<input name="stroke-length" type="number" value="100" min="10" max="512" />
+		</p>
+		<p>
+			<span>Stroke count:</span>
+			<input name="stroke-count" type="number" value="512" min="1" max="1024" />
+		</p>
+		<p>
+			<span>Jitter:</span>
+			<input name="jitter" type="number" value="50" min="0" max="1000" />
+		</p>
+		<p>
+			<button type="button" onclick="Generate()">Generate</button>
+		</p>
+	</form>
+	<canvas id="canvas"></canvas>
+	<script>
+		function Generate() {
+			const form = document.forms[0];
+			const textureSize = +form['texture-size'].value;
+			const strokeLength = +form['stroke-length'].value;
+			const jitter = +form['jitter'].value;
+
+			/** @type { HTMLCanvasElement } */
+			const $cvs = document.getElementById('canvas');
+			$cvs.width = $cvs.height = textureSize;
+			const ctx = $cvs.getContext('2d');
+
+			ctx.fillStyle = 'black';
+			ctx.fillRect(0, 0, textureSize, textureSize);
+			
+			ctx.lineWidth = +form['stroke-width'].value;
+			for(let i = 0; i < +form['stroke-count'].value; ++i) {
+				const x0 = (Math.random() * 2 - 1) * textureSize,
+					y0 = Math.random() * textureSize;
+
+				const strength = Math.pow(Math.random(), .9);
+				const gradient = ctx.createLinearGradient(x0, y0, x0 + textureSize, y0);
+				gradient.addColorStop(0, `rgba(255,0,0,${strength})`);
+				gradient.addColorStop(1, `rgba(255,0,0,${strength - .1})`);
+				ctx.strokeStyle = gradient;
+
+				ctx.beginPath();
+				ctx.moveTo(x0, y0);
+				for(let t = 0, lt = 0, dy = 0; t <= 1; lt = t, t += 1e-2) {
+					const dt = t - lt;
+					let j = Math.random() - .5;
+					j = Math.pow(Math.abs(j), .5) * Math.sign(j);
+					dy += j * dt * jitter;
+					ctx.lineTo(x0 + textureSize * t, y0 + dy);
+				}
+				ctx.stroke();
+			}
+		}
+		Generate();
+	</script>
+</body>
+</html>
