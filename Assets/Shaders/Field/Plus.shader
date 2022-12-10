@@ -2,6 +2,7 @@ Shader "ShaderFun/Field/Plus" {
 	Properties {
 		[MainTexture] A("A", 2D) = "gray" {}
 		B("B", 2D) = "gray" {}
+		C("C", Float) = 1
 	}
 
 	SubShader {
@@ -26,6 +27,7 @@ Shader "ShaderFun/Field/Plus" {
 
 			sampler2D A;
 			sampler2D B;
+			float C;
 
 			v2f vert(appdata v) {
 				v2f o;
@@ -37,7 +39,7 @@ Shader "ShaderFun/Field/Plus" {
 			float4 frag(v2f i) : SV_Target {
 				float a = DecodeField(tex2D(A, i.uv));
 				float b = DecodeField(tex2D(B, i.uv));
-				return EncodeField(a + b);
+				return EncodeField(a + b * C);
 			}
 			ENDCG
 		}

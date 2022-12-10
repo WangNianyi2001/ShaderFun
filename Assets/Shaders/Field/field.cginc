@@ -11,10 +11,10 @@ inline float ExpandRange(float v) {
 	return tan((v - .5f) * PI);
 }
 
-inline float4 EncodeField(float v) {
+inline float EncodeField(float v) {
 	return EncodeFloatRGBA(CompressRange(v));
 }
 
-inline float DecodeField(float4 enc) {
-	return ExpandRange(DecodeFloatRGBA(enc));
+inline float DecodeField(float3 enc) {
+	return ExpandRange(DecodeFloatRGBA(float4(enc, 0)));
 }

@@ -1,6 +1,6 @@
-Shader "ShaderFun/Water/Display" {
+Shader "ShaderFun/Terrain/Height" {
 	Properties {
-		[MainTexture] Height("Height Field", 2D) = "gray" {}
+		[MainTexture] Height("Height", 2D) = "gray" {}
 		Laplace("Laplace Field", 2D) = "gray" {}
 	}
 
@@ -36,11 +36,16 @@ Shader "ShaderFun/Water/Display" {
 				return o;
 			}
 
+			float Sample(sampler2D tex, float2 uv) {
+				float x = DecodeField(tex2D(tex, uv));
+				x = CompressRange(x) - .5f;
+				x = sign(x) * pow(abs(x), .1f);
+				return x + .5f;
+			}
+
 			float4 frag(v2f i) : SV_Target {
 				float height = DecodeField(tex2D(Height, i.uv));
-				float3 res = float3(.5, .5, 1);
-				res += float3(1, 1, 0) * height;
-				return float4(.5, res.gb, 1);
+				return float4(float3(1, 1, 1) * height, 1);
 			}
 			ENDCG
 		}

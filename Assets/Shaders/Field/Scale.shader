@@ -35,7 +35,7 @@ Shader "ShaderFun/Field/Scale" {
 			}
 
 			float4 frag(v2f i) : SV_Target{
-				return EncodeField(DecodeField(tex2D(Field, i.uv)) * Scalar);
+				return EncodeField(DecodeField(tex2D(Field, i.uv).rgb) * Scalar);
 			}
 			ENDCG
 		}

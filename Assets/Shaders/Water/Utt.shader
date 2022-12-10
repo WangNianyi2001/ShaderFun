@@ -27,14 +27,14 @@ Shader "ShaderFun/Water/Utt" {
 			sampler2D Height;
 			float4 resolution;
 
-			float2 ScreenToUv(float2 screen) {
-				return screen / resolution.xy;
+			float2 WorldToUv(float2 world) {
+				return world / resolution.xy;
 			}
-			float2 UvToScreen(float2 uv) {
+			float2 UvToWorld(float2 uv) {
 				return uv * resolution.xy;
 			}
-			float HeightAt(float2 screen) {
-				return DecodeField(tex2D(Height, ScreenToUv(screen)));
+			float HeightAt(float2 world) {
+				return DecodeField(tex2D(Height, WorldToUv(world)));
 			}
 
 			v2f vert(appdata v) {
@@ -45,14 +45,14 @@ Shader "ShaderFun/Water/Utt" {
 			}
 
 			float4 frag(v2f i) : SV_Target{
-				float2 screen = UvToScreen(i.uv);
+				float2 world = UvToWorld(i.uv);
 				float res = 0;
-				res += HeightAt(screen + float2(+1, 0));
-				res += HeightAt(screen + float2(-1, 0));
-				res += HeightAt(screen + float2(0, +1));
-				res += HeightAt(screen + float2(0, -1));
+				res += HeightAt(world + float2(+1, 0));
+				res += HeightAt(world + float2(-1, 0));
+				res += HeightAt(world + float2(0, +1));
+				res += HeightAt(world + float2(0, -1));
 				res /= 4;
-				res -= HeightAt(screen);
+				res -= HeightAt(world);
 				return EncodeField(res);
 			}
 			ENDCG
